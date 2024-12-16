@@ -1,0 +1,212 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\newtheorem{fact}{Fact}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{array}
+\usepackage[margin=1in]{geometry}
+
+\title{CS561 HW11}
+\author{Ryan Scherbarth}
+\date{November 2024}
+
+\begin{document}
+
+\maketitle
+
+\begin{enumerate}
+
+%%
+%%% Begin Q1
+%%
+\item \textbf{ Prove by induction that any tree with $n$ nodes has exactly $n-1$ edges. Don't forget to include the Base Case (BC), Inductive Hypothesis (IH), and Inductive Step (IS). } \\
+
+\textbf{Base case: } $n=1$ \\
+By definition, and undirected tree is defined as a collection of vertexes, $v$, and edges, $(u,v)$. An undirected edge is a path joining together two vertexes. \\
+\newline 
+In the case where we have $n = v = 1$ vertexes, it is not possible for us to create a single edge, since by definition it must join two unique vertexes on an undirected graph. Therefore, we will have $n-1 = 1 - 1 = 0$ edges, so our base case holds true. \\
+
+\textbf{ Inductive Hypothesis: } \\
+For all $k < n$, the number of edges in a tree of size $k$ is exactly $k-1$. \\
+
+\textbf{ Inductive Step: } \\
+Let $T$ be a connected, acyclic graph with $n$ nodes. Due to the properties of this graph, proving that there exists at least 1 leaf node in any case will also show that there exists exactly $n-1$ edges. \\
+\newline 
+We will start by creating a new tree, $T_2$, which results from removing any single node and corresponding edge from $T$ s.t. $T_2$ is still a valid tree. Invoking our IH on $T_2$, we can say that this tree has exactly $n-1-1 = n-2$ edges. \\
+\newline 
+Say we want to increase now to $n$ nodes again, in order to follow the rules of an acyclic graph it is only possible to add exactly 1 edge. We know this because adding 0 lines will result in the graph being unconnected, failing the second claim. \\ 
+\newline 
+An edge is defined as a connection between two nodes (we cannot have an edge connected to itself in an undirected graph). We can then see that it will not be possible to add any number greater than 1 edge after increasing the number of nodes by 1 without introducing a cycle, which fails the second claim we've made about the graph. \\
+\newline 
+Therefore, we have proven that when introducing a any new node, it is not possible to add less than 1 edge, and it is not possible to add any more than 1 edges. Thus, the proof holds. 
+
+
+
+
+
+
+%%
+%%% Begin Q2
+%%
+\newpage
+\item \textbf{ Prove Claim 1 from Single Source Shortest Paths Lecture (SSSP Lecture). } \\
+\newline 
+\textbf{ \underline{claim 1:} if $dist(v) \neq \infty$, then $dist(v)$ is the total weight of the predecessor chain ending at $v$. } \\
+
+We will prove claim one via induction on the defined variable $s = length(pred(v))$. \\
+
+\textbf{ Base case: } $s=0$ \\
+When the length of $pred(v) = 0$, then we have no predecessors, so $s = v$. In this case, the claim holds true. \\ 
+
+\textbf{ Inductive Hypothesis: } \\
+Assume that for any node $u$ with a predecessor chain of length $k$, s.t. $k < \ell$, the distance $dist(u)$ is the total weight of the predecessor chain from $s$ to $u$. \\
+
+\textbf{ Inductive Step: } \\
+Let node $v$ have a predecessor chain of length $\ell$. We can use the inductive hypothesis to determine that $dist(pred(v))$ is the total weight of the predecessor chain from $s$ to $v$. \\
+\newline 
+Let $w(prev(v),v)$ be the weight of the edge from $pred(v)$ to $v$. Then we can say \\
+$dist(v) = dist(pred(v)) + w(pred(v),v)$. \\
+\newline 
+By the inductive hypothesis, $dist(pred(v))$ is the sum of weights along the pred chain, adding $w(pred(v))$ gives the new total weight fo the path from $s$ to $v$, therefore, via proof by induction, claim 1 holds. \\
+\newline
+
+% for claim 1, inductive on length of pred(V)
+% base case: length s, then v is your source, v = s
+% Let L be the number of edges in a precdecessor chain ending at v. For all k < l, where k is the length of u's pred chain, dist(u) is equal to the weight of the pred chain. 
+% IS: dist(v) = pred(v) + weight(pred(v), v)
+% dist(pred(v)) is length l-1. weight of pred(v) is something. 
+% apply IH to dist(pred(v)) and then we add weight(pred(v), v) to pred(v) and it satisfies.
+
+
+
+
+
+
+
+
+%%
+%%% Begin Q3
+%%
+\item \textbf{ Prove claim 2 from Single Source Shorted Paths Lecture (SSSP Lecture) } \\
+\newline 
+\textbf{ \underline{ Claim 2: } If the algorithm halts, then $dist(v) \leq w(s \rightarrow v)$ for any path $s \rightarrow v$. } \\
+
+\textbf{Base case: } $n=1$ \\
+If the path $s \rightarrow v$ contains no edges, meaning $v = s$, then $dist(v) = dist(s) = 0$. By definition, $w(s \rightarrow v) = 0$ since the weight function should be the summation of each edge. So $dist(v) \leq w(s \rightarrow v)$. \\
+\newline 
+\textbf{Inductive Hypothesis:} \\
+Assume that for any path $s \rightarrow u$ with $k$ edges, $dist(u) \leq w(s \rightarrow u)$, where $dist(u)$ gives the weight of the shortest distance from $s$ to $u$ when the program has halted. \\
+\newline 
+\textbf{Inductive Step:} \\
+Let the path $s \rightarrow v$ have $k+1$ edges, and $u$ be the predecessor of $v$. Invoking the IH we can say $dist(u) \leq w(s \rightarrow u)$. \\
+\newline 
+For each iteration, we relax an edge $(u,v)$, which means $dist(v)$ is the new minimum distance to that node. \\
+\newline 
+By the IH, $dist(v) \leq w(s \rightarrow u) + w(u,v)$ for our node. since $w(s \rightarrow u) + w(s \rightarrow v) = w(s \rightarrow v)$, we can say that upon the algorithm halting, $dist(v) \leq w(s \rightarrow v)$. 
+
+
+
+
+
+
+
+% For claim 2: when the algorithm halds we know by definition that dist(v) is the minimum, so any other path must not be the minimum. answer is similar to claim 1. 
+
+% start with dist(v) show somehow your path cannot get smaller traveling arbitraroy path. hint is algoritm is finished (halts)
+
+
+
+%%%
+%%    Ohter ones :(
+%%%
+
+
+% Things for #4: watch out what happens between 0 and 1
+% algorithm gives us a single tense edge.
+%
+% Tense edge: dist to u + weight of edge is less than the distance to v. 
+
+
+%%
+%%% Begin Q4a
+%%
+\newpage
+\item \textbf{ 24-3 Arbitrage } \\
+\textbf{ Arbitrage is the use of discrepancies in currency exchange rates to transform one unit of a currency into more than one unit of the same currency. For example, suppose that 1 U.S. dollar buys 49 India rupees, 1 Indian rupee buys 2 Japanese yen, and 1 Japanese yen buys 0.0107 U.S. dollars. Then, by converting currencies, a trader can start with 1 U.S. dollar and buy $49 * 2 * 0.0107 = 1.0486$ U.S. dollars, thus turning a profit of 4.86 percent. } \\
+\textbf{Suppose that we are given $n$ currencies, $c_1, c_2, \dots, c_n$ and an $n \times n$ table $R$ of exchange rates, such that one unit of currency $c_i$ buys $R[i,j]$ units of currency $c_j$.}
+
+% \begin{enumerate}
+    
+% \item \textbf{ Give an efficient algorithm to determine whether or not there exists a sequence of currencies $<c_{i_1}, c_{i_2}, \dots, c_{i_k}>$ such that $R[i_1, i_2] * R[i_2, i_3] \dots R[i_{k-1}, i_k] * R[i_k, i_1] > 1$. Analyze the running time of your algorithm. } \\
+
+% We need to find the shortest path across the table to solve for some option. We can start by forming a graph with weights corresponding to the rate that we can exchange each currency for. For example, for $R[i,j]$ we can apply the weight function $w(i,j) = \log(R[i,j]) * -1$. We're going to make every edge negative to see how much we're "losing" as we convert so that our answer at the end will make sense (if greater than 1). \\
+% \newline 
+% the Bellman-Ford algorithm to find a valid path. To do so we choose some arbitrary vertex $s$ as our starting point with a weight of 0, and set the weight for all others to infinity. We can use negative cycle detection to find our path; if $dist(u) + w(u,v) < dist(v)$, then we can conclude that $pred(v) = u$. \\
+% \newline
+% After $|V| - 1$ iterations, we have to check for negative-weight cycles by iterating again over every edge. Our running time will be bounded by $|V| = n$ and $|E| = n^2$. We then have $O(|E||V|)$, which would be $O(n^3)$. \\
+% \newline
+
+
+
+% \item \textbf{ Give an efficient algorithm to print out such a sequence if one exists. Analyze the running time of your algorithm. } \\
+
+% The algorithm from part a is calculating a negative weight cycle already, for each vertex $v$ we will now maintain a predecessor array $pred$ storing all the predecessors of $v$. After $|V| - 1$ iterations we go verify all of our edges. We can further relax an edge if $dist(u) + w(u,v) < dist(v)$, then we have a negative weight cycle. \\
+% \newline 
+% Once we've found the negative weight cycle, we have now saved predecessors in the $pred$ array. We need th walk through it taking $|V|$ steps to make sure the returned result is valid. If so, we can print it. \\
+% \newline 
+% We still take $O(n^3)$ to run the Bellman-Ford, and $O(n)$ for tracing backwards leaves us at the same runtime of $O(n^3)$.
+
+% \end{enumerate}
+
+% Feedback was to do this similarly, but instead jst say 
+% "take a snapshot" and don't worry about type of data struture to store it in. Also think about similar to claim 2 how we know the problem halts, and if that's the case then we know it's the lowest possible by definition of the algorithm. 
+
+\begin{enumerate}
+
+\item \textbf{ Give an efficient algorithm to determine whether or not there exists a sequence of currencies $<c_{i_1}, c_{i_2}, \dots, c_{i_k}>$ such that $R[i_1, i_2] * R[i_2, i_3] \dots R[i_{k-1}, i_k] * R[i_k, i_1] > 1$. Analyze the running time of your algorithm. } \\
+
+To determine if it is possible to make some amount of profit via any possible combination of exchanges we create a graph $G(V,E)$ where each vertex is a currency, and edge has the weight function $w(i,j) = -1 * \log(R[i,j])$. We are able to use this weight function so that we can use the property of summing weights of a cycle to detect multiplicative properties. \\
+\newline 
+We will next use the Bellman-Ford starting from any currency to check for negative-weight cycles. if a negative cycle exists, it tells us there is a possible arbitrage opportunity over that cycle. The running time will be bounded by BF, with a time complexity of $O(n^3)$ for $n$ currencies. \\
+
+
+
+
+
+
+
+
+
+%%
+%%% Begin Q4b
+%%
+\item \textbf{ Give an efficient algorithm to print out such a sequence if one exists. Analyze the running time of your algorithm. } \\
+
+The Bellman-Ford algorithm guarantees that if there is a negative cycle possible in our graph, it will be made evident after no more than $n$ iterations. Once we've found such a path, we will start at that node and work backward. We can take a snapshot of the graph, and then use the predecessor array to walk backwards through the cycle, printing the sequence of nodes in the arbitrage loop. Bellman-Ford guarantees the shortest path up to the $n$th iteration, meaning this sequence can be at most $n$ paths.
+
+
+
+\end{enumerate}
+
+
+
+
+
+
+%%
+%%% Begin Q5
+%%
+\newpage
+\item \textbf{ Saia Trucking is a very safety conscious - and algorithm loving - trucking company. Given a pair of cities, they always try to find the safest route between that pair. They are thus faced with the following problem. } \\
+\textbf{ There is a directed graph $G=(V,E)$, where the vertices represent cities and the edges represent roads. Each edge has a value associated with it that gives the probability of safe transport on that edge, i.e. the probability that there will be no accident when driving across that edge. The probability of safe transport along any path in the graph is the product of the probabilities of safe transport on each edge in that path. } \\
+\textbf{ The goal is to find a path from a given node $s$ to a given node $t$ that maximizes the probability of safe transport. Describe an efficient algorithm to solve this problem. } \\
+
+We have a directed graph $g$, each edge being given a safety probability $p(u,v)$. We can use a log transformation and minimize the negative of the sum of logs, so we will set our new weight to be $w(u,v) = - \log(p(u,v))$. After the transformation we now have a shorted path problem which we can solve. \\
+\newline 
+We can use Dijkstra's algorithm to solve for the shortest path from $s$ to $t$ so long as we have $w(u,v) \geq 0$. After running Dijstra's algorithm, the shortest path from $s$ to $t$ in our transformed graph corresponds to the path with the maximum probability of safe transport in the original graph. \\
+\newline 
+Dijstra's algorithm works by using a queue, selecting each node iterating through starting at the smallest known distance, and marking visited nodes. We go through all of the vertices and edges in this manner. Our algorithm will ultimately be determined by this runtime, which is given by $O(|E| + |V| \log (|V|))$.
+
+\end{enumerate}
+
+\end{document}

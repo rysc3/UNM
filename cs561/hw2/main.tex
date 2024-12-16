@@ -1,0 +1,376 @@
+\documentclass{article}
+\usepackage{graphicx} % Required for inserting images
+\newtheorem{fact}{Fact}
+\usepackage{amsmath}
+\usepackage{amsthm}
+
+\title{CS561, HW2}
+\author{Ryan Scherbarth, University of New Mexico}
+\date{August 2024}
+
+\begin{document}
+
+\maketitle
+
+\begin{enumerate}
+\item Let $X$ be a random variable that is equal to the number of heads in two flips of a fair coin.
+\newline 
+\[
+\text{(a) What is } E(X^{2})
+\]
+\begin{align*}
+    E[X^{2}] & = (0)^{2}P(X=0) + (1)^{2}P(X=1) + (2)^{2}P(X=2) \\
+    E[X^{2}] & = \frac{3}{2}
+\end{align*}
+\[
+\boxed{E(X^{2}) = \frac{3}{2}}
+\]
+
+\[
+\text{(b) What is } E(X)^{2}
+\]
+\begin{align*}
+    X & = 0, 1, 2 \\
+    P(X=0,2) & = \frac{1}{4} \\
+    P(X=1) & = \frac{1}{2} \\
+    E[X] & = (0)P(X=0) + (1)P(X=1) + (2)P(X=2) \\
+    E[X] & = 1
+\end{align*}
+\[
+\boxed{(E[X])^{2} = 1}
+\]
+
+
+
+
+
+
+
+
+\newpage
+\item 7-3 Alternative quicksort analysis
+\[
+\text{(a)}
+\]
+Argue that, given an array of size $n$, the probability that any particular element is chosen as the pivot is $\frac{1}{n}$. Use this probability to define indicator random variables $X_i = I$ (The $i$th smallest element is chosen as the pivot). What is $E[X_i]$? \\
+
+We can define the indicator random variable $X_i$ as 1 if x is the $i$th smallest element, and 0 otherwise.
+\newline
+An array of randomly sorted elements is a uniform distribution. By the definition of a uniform distribution, every element has an equally probably chance of being chosen. 
+\newline 
+Therefore, we can calculate the expected value via:
+\begin{align*}
+    E[X_i] & = (1)(1-p(X=x)) + (0)(1-p(X=x)) \\
+    E[X_i] & = p(X=x)
+\end{align*}
+Since $p(X=x) = \frac{1}{n}$, 
+\[
+\boxed{E[X_i] = \frac{1}{n}}
+\]
+
+\[
+\text{(b)}
+\]
+Let $T(n)$ be a random variable denoting the running time of quicksort on an array of size $n$. Argue that 
+\newline 
+$E[T(n)] = E[\sum_{q=1}^{n}X_{q}(T(q-1) + T(n-q) + \Theta(n))]$ \\
+\newline 
+Let $X_q$ be an indicator random variable that is 1 if the $q$-th smallest element is the pivot, and 0 otherwise. Given a uniform distribution, the probability of any given element being the pivot is equally likely, therefore $P(X=x) = \frac{1}{n}$
+\newline 
+\begin{align*}
+    E[T(n)] & = \sum_{q=1}^{n} \frac{1}{n} (T(q-1) + T(n-q) + \Theta(n))
+\end{align*}
+Where $T(q-1)$ represents running time of the sub array of the first $q-1$ elements. $T(n-1)$ represents the subarray of the last n-q elements, and $\Theta(n)$ represents the time taken for the partitioning step itself.
+\newline 
+Then, via the linearity of expectation;
+\[
+\boxed{ E[T(n)] = E[\sum_{q=1}^{n}X_{q}(T(q-1) + T(n-q) + \Theta(n)) }
+\]
+
+\[
+\text{(c)}
+\]
+Show how to rewrite equation \\
+$E[T(n)] = E[\sum_{q=1}^{n}X_{q}(T(q-1) + T(n-q) + \Theta(n))$ \\
+as \\
+$E[T(n)] = \frac{2}{n} \sum_{q=1}^{n-1} E[ T(q) ] + \Theta(n)$
+\newline 
+\begin{align*}
+    E[T(n)] & = E[\sum_{q=1}^{n} X_{q} (T(q-1) + T(n-q) + \Theta(n)) \\
+    E[T(n)] & = \sum_{q=1}^{n} X_{q} (E[T(q-1)] + E[T(n-q)] + \Theta(n)) \\
+    E[T(n)] & = X_{q} \sum_{q=1}^{n} E[T(q-1)] + X_{q} \sum_{q=1}^{n} E[T(n-q)] + X_{q} \sum_{q=1}^{n} \Theta(n) \\
+    E[T(n)] & = 2 X_{q} \sum_{q=1}^{n-1} E[T(q)] + \Theta(n) & \text{$T(q-1)$ and $T(n-q)$ are sym.} \\
+    E[T(n)] & = \frac{2}{n} \sum_{q=1}^{n-1}E[T(q)] + \Theta(n) & \text{$X_{q} = \frac{1}{n}$}
+\end{align*}
+\[
+\boxed{E[T(n)] = \frac{2}{n} \sum_{q=1}^{n-1}E[T(q)] + \Theta(n)}
+\]
+
+\[
+\text{(d) Show that } \sum_{q=1}^{n-1}qlg(q) \leq \frac{n^2}{2}lg(n)-\frac{n^2}{8} \text{ for } n \geq 2
+\]
+% \begin{align*}
+%     \sum_{q=1}^{\frac{n}{2}-1} qlg(q) + \sum_{q=\frac{n}{2}}^{n-1}qlg(q) & \leq \frac{n^2}{2}lg(n)-\frac{n^2}{8} \\
+%     \sum_{q=1}^{\frac{n}{2}-1} qlg(q) + \sum_{q=\frac{n}{2}}^{n-1}qlg(q) & = (\frac{n}{2}-1)lg(\frac{n}{2}-1) - (1) lg(1) + (n-1)lg(n-1) - (\frac{n}{2})lg(\frac{n}{2}-1) \\
+%     \sum_{q=1}^{\frac{n}{2}-1} qlg(q) + \sum_{q=\frac{n}{2}}^{n-1}qlg(q) & = (n-1)lg(n-1)-lg(\frac{n}{2}-1) \\
+%     \sum_{q=1}^{\frac{n}{2}-1} qlg(q) + \sum_{q=\frac{n}{2}}^{n-1}qlg(q) & \approx nlg(n) - lg(\frac{n}{2}) \\
+%     nlg(n) - lg(\frac{n}{2}) & \leq \frac{n^2}{2}lg(n)-\frac{n^2}{8} \\
+%     nlg(n) - lg(\frac{n}{2}) & \leq n^2lg(n) - n^2 \\
+% \end{align*}
+% \begin{align*}
+%     \sum_{q=1}^{\frac{n}{2}-1} qlg(q) + \sum_{q=\frac{n}{2}}^{n-1}qlg(q) & \leq \frac{n^2}{2}lg(n)-\frac{n^2}{8} \\
+%     \int_{q=1}^{\frac{n}{2}}qlg(q)dq + \int_{q=\frac{n}{2}}^{n}qlg(q)dq & \leq \frac{n^2}{2}lg(n)-\frac{n^2}{8} \\
+%     % (\frac{n^{2}(lg(n)-lg(2))}{8} - \frac{n^{2}}{16} + \frac{1}{4}) + (\frac{n^{2}lg(n)}{2} - \frac{n^{2}}{4} - \frac{n^{2}(lg(n)-lg(2))}{8} + \frac{n^{2}}{16}) & \leq \frac{n^2}{2}lg(n)-\frac{n^2}{8} \\
+%     % \frac{1-n^{2}}{4} + \frac{n^{2}lg(n)}{2} & \leq \frac{n^2}{2}lg(n)-\frac{n^2}{8} \\
+%     % \frac{1-n^{2}}{4} & \leq -\frac{n^{2}}{8} \\
+%     % 2 - 2n^{2} & \leq -n^{2}
+%     \frac{n^{2}}{2}ln(n) - \frac{n^{2}}{4} + \frac{1}{4} & \leq \frac{n^2}{2}lg(n)-\frac{n^2}{8} \\
+%     - \frac{n^2}{4} + \frac{1}{4} & \leq - \frac{n^2}{8} \\
+%     -2n^2 + 2 & \leq - n^2
+% \end{align*}
+% \[
+% \boxed{-2n^2 + 2 \leq - n^2}
+% \]
+% \newpage
+\begin{align*}
+    \sum_{q=1}^{n-1}q\log(q) & = \sum_{q=1}^{\frac{n}{2}-1}q\log(q) + \sum_{q=\frac{n}{2}}^{n-1}q\log(q) \\
+    \sum_{q=1}^{\frac{n}{2}-1}q\log(q) & \leq \log(\frac{n}{2}) \sum_{q=1}^{\frac{2}{2}-1}q \\
+    \sum_{q=1}^{\frac{n}{2}-1}q & = \frac{(\frac{n}{2})(n-1)}{2} \leq \frac{n^2}{8} \\
+    \sum_{q=1}^{\frac{n}{2}-1}q\log(q) & = \frac{n^2}{8}(\log(n)-1)
+\end{align*}
+
+
+
+\newpage
+\[
+\text{(e) }
+\]
+Using the bound from equation (d), show that the recurrence in equation (c) has the solution $E(T(n)) = O(n lg(n))$. \\
+\newline 
+% Show that: $-2n^{2} + 2 \leq c * (n lg(n))$, for some $c \geq 0$. \\
+% Base case: Let $n = 2$.
+% \begin{align*}
+%     -2(2)^{2} + 2 & \leq c * ( (2) lg (2) ) \\ 
+%     -8 + 2 & \leq c * 2lg(2) \\ 
+%     -3 & \leq c * lg(2) \\
+%     - \frac{3}{lg(2)} & \leq c
+% \end{align*}
+% Inductive Hypothesis: $-2n^{2} + 2 \leq - \frac{3}{lg(2)} (n lg(n))$, for all $n \geq 2$. \\
+% Inductive Step:
+% \begin{align*}
+%     T(n+1) & = -2(n+1)^{2} + 2 \\
+%     & = -2n^{2} -4n \\
+%     -2n^{2} -4n & \leq c * (n+1)lg(n+1) \\
+%     & \leq c[ (n+1)lg(n+1) -nlg(n) ] \\
+%     & \leq c[ nlg(n) + lg(n) + \frac{lg(n)}{n} ] \\
+%     -2n^{2} -4n & \leq (- \frac{3}{lg(2)}) [ nlg(n) + lg(n) + \frac{lg(n)}{n} ]
+% \end{align*}
+% Therefore, the proof holds for all $n \geq 2$, where $c = - \frac{3}{lg(2)}$. \\
+Show that: $-2n^{2} + 2 \leq c * n\log(n)$ for $c \geq 0$ is $O(n\log(n))$ \\
+Base case $n=2$: \\
+\begin{align*}
+    T(2) & \leq c* (2) \log(2) \\
+    -2(2)^{2} + 2 & \leq 2c \log(2) \\
+    -6 & \leq 2c \\
+    c & \geq 3
+\end{align*}
+Inductive Hypothesis: \\
+Let $j > n$: \\
+\begin{align*}
+    T(j) \leq c * j \log(j)
+\end{align*}
+Inductive Step: \\
+\begin{align*}
+    -2n^{2} +2 & \leq c * n\log(n)
+\end{align*}
+This is trivially provable since the $n^2$ factor grows at an asymptotically faster rate that $n\log(n)$, so $f(n)$ will always be less than or equal to $c*n\log(n)$ when $j < n$. \\
+Therefore;
+\[
+\boxed{f(n) = O(n\log(n))}
+\]
+\newpage 
+
+
+
+
+
+
+
+\item You are doing a stress test for the new Iphone. Given a ladder with $n$ rungs, determine the highest run from which you can drop a prototype without it breaking. You want the smallest number of drops. 
+\[
+\text{(a) You have exactly 2 phones, find highest safe rung in } o(n) \text{ drops.}
+\]
+
+\begin{align*}
+    \frac{k(k+1)}{2} & \leq n \\
+    k^{2} + k -2x & \geq 0 \\
+    k & = \frac{-1 \pm \sqrt{1 + 8n}}{2} \\
+    f(n) & = \Theta{\sqrt{n}}
+\end{align*}
+\[
+\boxed{ f(n) = \sqrt{n} }
+\]
+
+
+\[
+\text{(b) Given k phones, find an algo. for the highest safe run with smallest num drops.}
+\]
+% To generalize the previous algorithm, we can just adjust to allow a variable number of repetitions instead of the constant 2. \\
+% \newline 
+% Case: phone breaks \\
+% We now have $k-1$ phones, and need to set our test space to $x_1 - 1$ rings. \\
+% \newline 
+% Case: phone doesn't break \\
+% Number of phones remains $k$, but test space is adjusted s.t. we drop the phone from $x_1 + x_2$, where $x_2$ is determined by the previous $f(n)$. \\
+% \begin{align*}
+%     f(k, n) = 1 + f(k-1, x-1) + f(k, n-x)
+% \end{align*}
+% Where $f(k-1, x-1)$ represents a phone breaking, \\
+% $f(k, n-x))$ represents a successful drop, \\
+% we take the max of this function to find the maximum number of drops, \\
+% and the min $1 \leq x \leq n$ to find the min number of drops. \\
+% \newline 
+% \newline 
+% We'll see our worst case when $f(k-1, x-1)$, and $f(k, n-x)$ are closest to equal. 
+% \begin{align*}
+%     f(k-1, x-1) & \approx f(k, n-x) \\
+%     f(k, n) & \approx c * f(k-1, n) \\
+%     x & \approx \sqrt{ \frac{2n}{k} }
+% \end{align*}
+% Therefore; 
+% \begin{align*}
+%     f(k, n) & \approx 1 + f(k-1, \sqrt{ \frac{2n}{k}} + f(k, n - \sqrt{ \frac{2n}{k}}) ) \\
+%     f(k, n) & \approx \sqrt[k]{n} \\
+%     f(k, n) & = O(\sqrt[k]{n}) \\
+%     f(k-1, n) & = O(\sqrt[k-1]{n})
+% \end{align*}
+% Since $f(k, n)$ grows asymptotically slower than $f(k-1, n)$, we can conclude;
+% \[
+% \boxed{f(k, n) = o(f(k-1, n))}
+% \]
+% Show that $f(n) = 1 + f(k-1, x-1) + f(k, n-x)$ is $\leq$ $c * \sqrt[3]{n}$ for any $c > 0$. \\
+% Base Case: Let k = 1 \\
+% \begin{align*}
+%     f(1, n) & = n
+% \end{align*}
+% Therefore, $f(1, n) = O(n)$ \\
+% Inductive Hypothesis: for all $k-1$ phones, $f(k-1, n) = O(\sqrt[k-1]{n})$. \\
+% Inductive Step: 
+% \begin{align*}
+%     f(k,n) & = 1 + f(k-1, x-1) + f(k, n-x) \\
+%     \text{Let } x & = \sqrt{\frac{2n}{k}} \\
+%     f(k-1, \sqrt{\frac{2x}{k}}) & = 1 + f(k-1, \sqrt{\frac{2n}{k}}) + f(k, n - \sqrt{\frac{2n}{k}}) \\
+%     & = O(\sqrt[k-1]{\sqrt{\frac{2n}{k}}}) \\
+%     & = O(\sqrt[k]{n})
+% \end{align*}
+% Since our two problems, $f(k-1, x-1)$ \& $f(k, n-x)$ are proportional to n, we have
+% \begin{align*}
+%     f(k, n) = 1 + O(\sqrt[k]{n}) + O(\sqrt[k]{n}) = O(\sqrt[k]{n})
+% \end{align*}
+% Since $f(k, n) = O(\sqrt[k]{n})$ and $f(k-1, n) = O(\sqrt[k-1]{n})$, $k-1$ grows asymptotically quicker than $k$, Therefore;
+% \begin{align*}
+%     f(k, n) = o(f(k-1, n))
+% \end{align*}
+Using $f(n) = \sqrt{n}$ from (a), we can prove by induction that $f(n)$ holds. \\
+\newline 
+Show that $T(k, n) = \sqrt[k]{n} + T(k-1, \sqrt[k]{n}) \leq c * \sqrt[k]{n}$ \\
+Base case $n=1$:
+\begin{align*}
+    T(1, n) & = \sqrt[1]{n} \\
+    & = n \\
+    T(1, n) & \leq \sqrt[k]{n}
+\end{align*}
+Therefore, the inequality holds when $c = 1$. \\
+Inductive Hypothesis: for all $j < k$, the inequality 
+\begin{align*}
+    T(j, n) = \sqrt[k]{n} + T(k-1, \sqrt[k]{n}) \leq c * \sqrt[k]{n}
+\end{align*}
+Inductive Step: 
+\begin{align*}
+    \sqrt[k]{n} + T(k-1, \sqrt[k]{n}) & \leq c * \sqrt[k]{n} \\ 
+    & \leq \sqrt[k]{n} + c * \sqrt[k]{n} \\
+    & \leq (1+c) \sqrt[k]{n}
+\end{align*}
+Therefore, 
+\begin{align*}
+    \boxed{T(f, n) = O(\sqrt[k]{n} + T(k-1, \sqrt[k]{n}))}
+\end{align*}
+
+
+
+
+
+
+\newpage
+\item The game of Match is played with a special deck of 27 cards. Each card has three attributes: color, shape and number. The possible color values are red, green, and blue. The possible shape values are square, circle, and heart. The possible number values are 1, 2, and 3. Each of the 3 * 3 * 3 = 27 possible combinations is represented by a card in the deck. A match is a set of 3 cards with the property that for every one of the three attributes, either all the cards have the same value for that attribute, or they all have different values for that attribute. For example, the following three cards are a match: (3, red, square), (2 blue square), (1, green, square).
+\[
+\text{(a) If we shuffle the deck and turn over three cards, what is prob of match?}
+\]
+There are 27 cards, each with 3 values, so $3 * 3 * 3 = 27$. Given that we've already chosen 3 cards freely, the probability that we choose a third card that matches with the previous two is $P(X=x) = \frac{1}{25}$.
+
+\[
+\text{(b) Turn over } n \text{ cards where } n \leq 27 \text{ what is the expected number of matches?}
+\]
+We can calculate the number of possible sets;
+\begin{align*}
+    \binom{n}{3} = \frac{n(n-1)(n-2)}{6}
+\end{align*}
+Given that $P(X=x) = \frac{1}{25}$ is the chance that the third card drawn matches the previous two;
+\begin{align*}
+    \binom{n}{3} \frac{1}{25} = \frac{n(n-1)(n-2)}{6} \frac{1}{25} = \frac{n(n-1)(n-2)}{150}
+\end{align*}
+We can verify with $n=27$;
+\begin{align*}
+    \frac{27(26)(25)}{150} = \frac{1}{25} * 2925 = 117
+\end{align*}
+So the expected number of matches (including overlap) when $27$ cards are turned over is $117$.
+
+
+
+
+
+\newpage
+\item A big square with side length 1 is partitioned into $x^2$ small squares, each with side length $\frac{1}{x}$, for some positive $x$. Then $n$ points are distributed independently and uniformly at random in the big square. 
+\[
+\text{(a) Expected number of pairs of points in the same small square.}
+\]
+\begin{align*}
+    P( \text{2 points in small square} ) = \frac{1}{x^{2}}
+\end{align*}
+We calculate the expected value;
+\begin{align*}
+    \binom{n}{2} * \frac{1}{x^2} = \frac{n(n-1)}{2x^2}
+\end{align*}
+For the expected number of pairs of points that fall into the same small square. 
+\begin{align*}
+    \frac{n(n-1)}{2x^2} & \geq 1 \\
+    n(n-1) & \geq 1 \\
+    x^{2} & \leq \frac{n(n-1)}{2} \\
+    x & \leq \sqrt{\frac{n(n-1)}{2}}
+\end{align*}
+So when $x \leq \sqrt{\frac{n(n-1)}{2}}$ the expected value is greater than or equal to 1. 
+
+\[
+\text{(b) Use Markov's inequality for prob. there are at least 2 points in a small square}
+\]
+Markov's inequality says that for a positive random variable $X$, any $a > 0$: \\
+\begin{align*}
+    P(X \geq a) = \leq \frac{E[X]}{a}
+\end{align*}
+if we let $X$ be the number of pairs of points in the small square;
+\begin{align*}
+    E[X] = \frac{n(n-1)}{2x^2}
+\end{align*}
+Let $a = 1$
+\begin{align*}
+    P(X \geq 1) & < \frac{n(n-1)}{2x^2} \\
+    \frac{n(n-1)}{2x^2} & < 1 \\
+    n(n-1) & < 2x \\
+    x & > \sqrt{\frac{n(n-1)}{2}}
+\end{align*}
+Therefore, for all values greater than $\sqrt{\frac{n(n-1)}{2}}$ our $x$ value will be less than 1. 
+
+
+\end{enumerate}
+
+\end{document}
